@@ -22,7 +22,7 @@ def get_mono_balance():
         currency = acc["currencyCode"]
         iban = acc.get("iban", "—")
         balances.append(f"IBAN: {iban}, Баланс: {balance:.2f} {currency}")
-        if acc["type"] = "yellow"
+        if acc["type"] == "yellow":
             balanda = acc["balance"]
     return balanda
 
