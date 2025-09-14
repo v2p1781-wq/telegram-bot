@@ -25,6 +25,7 @@ def main():
                 text = upd["message"].get("text", "")
                 send_message(chat_id, "Echo: " + text)
 
-if name == "main":
+if __name__ == "__main__":
     main()
+
 
