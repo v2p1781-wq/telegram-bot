@@ -1,3 +1,9 @@
+import requests
+import os
+
+MONO_TOKEN = os.getenv("MONO_TOKEN")
+MONO_API = "https://api.monobank.ua/personal/client-info"
+
 def get_mono_balance():
     if not MONO_TOKEN:
         return "Помилка: MONO_TOKEN не заданий у змінних середовища."
@@ -17,3 +23,6 @@ def get_mono_balance():
         iban = acc.get("iban", "—")
         balances.append(f"IBAN: {iban}, Баланс: {balance:.2f} {currency}")
     return "\n".join(balances)
+
+if __name__ == "__main__":
+    print(get_mono_balance())
