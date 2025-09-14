@@ -22,7 +22,7 @@ def get_mono_balance():
         currency = acc["currencyCode"]
         iban = acc.get("iban", "—")
         balances.append(f"IBAN: {iban}, Баланс: {balance:.2f} {currency}")
-    return "\n".join(balances)
+    return data.get("accounts")[4]["balance"]
 
 if __name__ == "__main__":
     print(get_mono_balance())
