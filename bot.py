@@ -6,7 +6,7 @@ TOKEN = os.getenv("BOT_TOKEN")
 API = f"https://api.telegram.org/bot{TOKEN}"
 
 # Твій токен Monobank
-MONO = os.getenv("MONO_TOKEN")
+MONO_TOKEN = os.getenv("MONO_TOKEN")
 MONO_API = "https://api.monobank.ua/personal/client-info"
 
 def get_updates(offset=None, timeout=10):
@@ -20,7 +20,7 @@ def send_message(chat_id, text):
     requests.post(API + "/sendMessage", data={"chat_id": chat_id, "text": text})
 
 def get_mono_balance():
-    headers = {MONO}
+    headers = {"X-Token": MONO_TOKEN}
     r = requests.get(MONO_API, headers=headers)
     if r.status_code == 200:
         data = r.json()
@@ -53,5 +53,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
