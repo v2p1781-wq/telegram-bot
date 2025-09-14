@@ -20,17 +20,26 @@ def send_message(chat_id, text):
     requests.post(API + "/sendMessage", data={"chat_id": chat_id, "text": text})
 
 def get_mono_balance():
-    headers = {"X-Token": MONO_TOKEN}
-    r = requests.get(MONO_API, headers=headers)
-    if r.status_code == 200:
-        data = r.json()
-        # Беремо перший рахунок (accounts[0])
-        account = data["accounts"][0]
-        balance = account["balance"] / 100  # Баланс у копійках → грн
-        currency = account["currencyCode"]
-        return f"Баланс: {balance:.2f} {currency}"
-    else:
-        return "Не вдалося отримати баланс Monobank."
+    if not MONO_TOKEN:
+        return "Помилка: MONO_TOKEN не заданий у змінних середовища."
+
+    headers = {"X-Token": MONO_TOKEN}   # <-- тут словник, все ок
+    try:
+        r = requests.get(MONO_API, headers=headers, timeout=10)
+        r.raise_for_status()
+    except Exception as e:
+        return f"Помилка при запиті: {e}"
+
+    data = r.json()
+    balances = []
+    for acc in data.get("accounts", []):
+        balance = acc["balance"] / 100  # копійки → грн
+        currency = acc["currencyCode"]
+        iban = acc.get("iban", "—")
+        balances.append(f"IBAN: {iban}, Баланс: {balance:.2f} {currency}")
+        if acc["type"] == "yellow":
+            balanda = acc["balance"] / 100
+    return balanda
 
 def main():
     offset = None
@@ -53,6 +62,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
