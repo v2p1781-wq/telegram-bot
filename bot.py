@@ -2,7 +2,7 @@ import requests
 import os
 
 TOKEN = os.getenv("BOT_TOKEN")
-API = f"https://api.telegram.org/bot{BOT_TOKEN}"
+API = f"https://api.telegram.org/bot{TOKEN}"
 
 def get_updates(offset=None, timeout=10):
     params = {"timeout": timeout}
@@ -27,3 +27,4 @@ def main():
 
 if name == "main":
     main()
+
