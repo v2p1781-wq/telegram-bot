@@ -23,4 +23,5 @@ jobs:
       - name: Run bot
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          MONO_TOKEN: ${{ secrets.MONO_TOKEN }}
         run: python bot.py
