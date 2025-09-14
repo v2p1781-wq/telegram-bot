@@ -20,7 +20,7 @@ def send_message(chat_id, text):
     requests.post(API + "/sendMessage", data={"chat_id": chat_id, "text": text})
 
 def get_mono_balance():
-    headers = {"X-Token": MONO_TOKEN}
+    headers = {MONO_TOKEN}
     r = requests.get(MONO_API, headers=headers)
     if r.status_code == 200:
         data = r.json()
@@ -53,3 +53,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
