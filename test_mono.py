@@ -22,8 +22,8 @@ def get_mono_balance():
         currency = acc["currencyCode"]
         iban = acc.get("iban", "—")
         balances.append(f"IBAN: {iban}, Баланс: {balance:.2f} {currency}")
-        if data.get("accounts")[4]["type"] = "yellow"
-            balanda = data.get("accounts")[4]["balance"]
+        if acc["type"] = "yellow"
+            balanda = acc["balance"]
     return balanda
 
 if __name__ == "__main__":
