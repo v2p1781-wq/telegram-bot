@@ -43,25 +43,24 @@ def get_mono_balance():
 
 def main():
     offset = None
-    while True:
-        res = get_updates(offset)
-        if res.get("ok"):
-            for upd in res["result"]:
-                offset = upd["update_id"] + 1
-                if "message" in upd:
-                    chat_id = upd["message"]["chat"]["id"]
-                    text = upd["message"].get("text", "")
-                    msg_time = upd["message"].get("date")
-                    now = int(time.time())
+    res = get_updates(offset)
+    if res.get("ok"):
+        for upd in res["result"]:
+            offset = upd["update_id"] + 1
+            if "message" in upd:
+                chat_id = upd["message"]["chat"]["id"]
+                text = upd["message"].get("text", "")
+                msg_time = upd["message"].get("date")
+                now = int(time.time())
 
-                    # Відповідь тільки на /kolko і тільки якщо повідомлення свіже (≤15 хв)
-                    if text.strip().lower() == "/kolko" and (now - msg_time <= 15 * 60):
-                        balance_info = get_mono_balance()
-                        send_message(chat_id, balance_info)
-        time.sleep(1)
+                # Відповідь тільки на /kolko і тільки якщо повідомлення свіже (≤15 хв)
+                if text.strip().lower() == "/kolko" and (now - msg_time <= 15 * 60):
+                    balance_info = get_mono_balance()
+                    send_message(chat_id, balance_info)
 
 if __name__ == "__main__":
     main()
+
 
 
 
