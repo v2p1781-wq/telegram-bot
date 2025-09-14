@@ -5,7 +5,7 @@ MONO = os.getenv("MONO_TOKEN")
 MONO_API = "https://api.monobank.ua/personal/client-info"
 
 def get_mono_balance():
-    headers = {MONO}
+    headers = {{MONO}}
     r = requests.get(MONO_API, headers=headers)
     if r.status_code == 200:
         data = r.json()
