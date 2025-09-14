@@ -5,6 +5,10 @@ import time
 TOKEN = os.getenv("BOT_TOKEN")
 API = f"https://api.telegram.org/bot{TOKEN}"
 
+# Твій токен Monobank
+MONO_TOKEN = os.getenv("MONO_TOKEN")
+MONO_API = "https://api.monobank.ua/personal/client-info"
+
 def get_updates(offset=None, timeout=10):
     params = {"timeout": timeout}
     if offset:
@@ -15,25 +19,37 @@ def get_updates(offset=None, timeout=10):
 def send_message(chat_id, text):
     requests.post(API + "/sendMessage", data={"chat_id": chat_id, "text": text})
 
+def get_mono_balance():
+    headers = {"X-Token": MONO_TOKEN}
+    r = requests.get(MONO_API, headers=headers)
+    if r.status_code == 200:
+        data = r.json()
+        # Беремо перший рахунок (accounts[0])
+        account = data["accounts"][0]
+        balance = account["balance"] / 100  # Баланс у копійках → грн
+        currency = account["currencyCode"]
+        return f"Баланс: {balance:.2f} {currency}"
+    else:
+        return "Не вдалося отримати баланс Monobank."
 
 def main():
     offset = None
-    res = get_updates(offset)
-    if res.get("ok"):
-        for upd in res["result"]:
-            offset = upd["update_id"] + 1
-            if "message" in upd:
-                chat_id = upd["message"]["chat"]["id"]
-                text = upd["message"].get("text", "")
-                msg_time = upd["message"].get("date")  # UNIX timestamp
-                now = int(time.time())
+    while True:
+        res = get_updates(offset)
+        if res.get("ok"):
+            for upd in res["result"]:
+                offset = upd["update_id"] + 1
+                if "message" in upd:
+                    chat_id = upd["message"]["chat"]["id"]
+                    text = upd["message"].get("text", "")
+                    msg_time = upd["message"].get("date")
+                    now = int(time.time())
 
-                # Перевіряємо чи повідомлення не старше 15 хвилин
-                if now - msg_time <= 15 * 60:
-                    send_message(chat_id, "Echo: " + text)
+                    # Відповідь тільки на /kolko і тільки якщо повідомлення свіже (≤15 хв)
+                    if text.strip().lower() == "/kolko" and (now - msg_time <= 15 * 60):
+                        balance_info = get_mono_balance()
+                        send_message(chat_id, balance_info)
+        time.sleep(1)
 
 if __name__ == "__main__":
     main()
-
-
-
