@@ -1,5 +1,6 @@
 import requests
 import os
+import time
 
 TOKEN = os.getenv("BOT_TOKEN")
 API = f"https://api.telegram.org/bot{TOKEN}"
@@ -14,6 +15,7 @@ def get_updates(offset=None, timeout=10):
 def send_message(chat_id, text):
     requests.post(API + "/sendMessage", data={"chat_id": chat_id, "text": text})
 
+
 def main():
     offset = None
     res = get_updates(offset)
@@ -23,9 +25,15 @@ def main():
             if "message" in upd:
                 chat_id = upd["message"]["chat"]["id"]
                 text = upd["message"].get("text", "")
-                send_message(chat_id, "Echo: " + text)
+                msg_time = upd["message"].get("date")  # UNIX timestamp
+                now = int(time.time())
+
+                # Перевіряємо чи повідомлення не старше 15 хвилин
+                if now - msg_time <= 15 * 60:
+                    send_message(chat_id, "Echo: " + text)
 
 if __name__ == "__main__":
     main()
+
 
 
