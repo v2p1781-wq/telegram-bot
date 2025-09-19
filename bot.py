@@ -53,13 +53,15 @@ def main():
                 msg_time = upd["message"].get("date")
                 now = int(time.time())
 
-                # Відповідь тільки на /kolko і тільки якщо повідомлення свіже (≤15 хв)
+                # Відповідь тільки на /kolko і тільки якщо повідомлення свіже (≤40 хв)
                 if text.strip().lower() == "/kolko" and (now - msg_time <= 40 * 60):
                     balance_info = get_mono_balance()
                     send_message(chat_id, balance_info)
+                delete_message(chat_id, message_id)
 
 if __name__ == "__main__":
     main()
+
 
 
 
